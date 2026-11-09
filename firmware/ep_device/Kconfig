@@ -1,0 +1,11 @@
+mainmenu "ep_device"
+
+config EP_DEVICE_HW_REVISION
+	int "Hardware (PCB) revision of the ep_device"
+	range 0 255
+	default 1
+	help
+	  Reported to the base node by the GET_INFO command. Bump this when
+	  building for a new board spin. 0 means a dev kit / breadboard setup.
+
+source "Kconfig.zephyr"

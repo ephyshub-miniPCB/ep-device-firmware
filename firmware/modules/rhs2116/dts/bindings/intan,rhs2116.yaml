@@ -1,0 +1,23 @@
+description: |
+    Intan RHS2116 16-channel bidirectional stimulation/recording amplifier.
+
+    The driver owns the SPIM peripheral named by `spim` directly (pins from its
+    pinctrl-0), rather than going through the Zephyr SPI API, so that commands
+    can be clocked out by a timer through PPI with no CPU involvement per word.
+    That SPIM node must therefore have status "disabled" so Zephyr's own SPI
+    driver doesn't claim it. CS is toggled per 32-bit word by GPIOTE.
+
+compatible: "intan,rhs2116"
+
+properties:
+    spim:
+        type: phandle
+        required: true
+        description: |
+            SPIM instance used to talk to the chip (with pinctrl-0 giving the
+            SCK/MOSI/MISO pins). Must not be SPIM3, see nRF52840 anomaly 198.
+
+    cs-gpios:
+        type: phandle-array
+        required: true
+        description: Active-low chip select line.

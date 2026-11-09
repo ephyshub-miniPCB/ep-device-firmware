@@ -1,0 +1,26 @@
+/*
+ * xiao_ble/nrf52840 (base, non-sense):
+ * use P0.05 currently for testing with rev1 pcb
+ * this corresponds to D5 header on the xiao
+ *
+ * the RHS2116 driver drives SPIM2 itself (timer/PPI paced streaming), so spi2
+ * is left disabled for Zephyr's SPI driver and only its pinctrl (the board's
+ * D8/D9/D10 SCK/MISO/MOSI) is used.
+ */
+/ {
+    ep_dev: rhs2116 {
+        compatible = "intan,rhs2116";
+        spim = <&spi2>;
+        cs-gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
+    };
+};
+
+&spi2 {
+    compatible = "nordic,nrf-spim";
+    status = "disabled";
+};
+
+// set i2c1 to disabled so that we can use D5 for intan CS line
+&i2c1 {
+	status = "disabled";
+};

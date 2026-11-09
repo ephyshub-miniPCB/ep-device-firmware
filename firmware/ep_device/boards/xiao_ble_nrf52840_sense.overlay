@@ -1,0 +1,19 @@
+/*
+ * xiao_ble/nrf52840/sense: the RHS2116 sits on the XIAO expansion header's SPI
+ * pins (D8/D9/D10, spi2's pinctrl) with CS on P0.10.
+ *
+ * the RHS2116 driver drives SPIM2 itself (timer/PPI paced streaming), so spi2
+ * is left disabled for Zephyr's SPI driver and only its pinctrl is used.
+ */
+/ {
+    ep_dev: rhs2116 {
+        compatible = "intan,rhs2116";
+        spim = <&spi2>;
+        cs-gpios = <&gpio0 10 GPIO_ACTIVE_LOW>;
+    };
+};
+
+&spi2 {
+    compatible = "nordic,nrf-spim";
+    status = "disabled";
+};

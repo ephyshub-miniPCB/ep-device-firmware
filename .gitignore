@@ -1,0 +1,6 @@
+build*/
+__pycache__/
+*.pyc
+.vscode/
+# recordings saved by the GUI
+firmware/pc_side/rec_*.csv

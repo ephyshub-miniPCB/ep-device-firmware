@@ -1,0 +1,8 @@
+/* nice!nano: built as the ItsyBitsy nRF52840, which has the same Adafruit UF2
+ * bootloader layout. The board already provides cdc_acm_uart0 for the shell and
+ * logs; this adds a second USB serial port for the binary data stream. */
+&zephyr_udc0 {
+	cdc_acm_uart1: cdc_acm_uart1 {
+		compatible = "zephyr,cdc-acm-uart";
+	};
+};

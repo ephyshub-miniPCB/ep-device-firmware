@@ -1,0 +1,2 @@
+# Devicetree vendor prefixes used by this module (merged with Zephyr's list)
+intan	Intan Technologies, LLC

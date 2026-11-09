@@ -1,0 +1,48 @@
+# Intan RHS2116 driver (out-of-tree Zephyr module, see README.md)
+
+menuconfig RHS2116
+	bool "Intan RHS2116 stimulation/recording amplifier"
+	default y
+	depends on DT_HAS_INTAN_RHS2116_ENABLED
+	depends on SOC_SERIES_NRF52X
+	select PINCTRL
+	select GPIO
+	select NRFX_GPIOTE0
+	select NRFX_PPI
+	help
+	  Driver for one Intan RHS2116 on an nRF52 SoC. The transport drives the
+	  SPIM named in devicetree directly, paced by TIMER2/TIMER3 through PPI,
+	  so those timers must not be used by anything else.
+
+if RHS2116
+
+config RHS2116_INIT_PRIORITY
+	int "RHS2116 init priority"
+	default APPLICATION_INIT_PRIORITY
+	help
+	  POST_KERNEL priority of the device init (transport set-up only; the
+	  chip itself is initialised by rhs2116_chip_init()).
+
+config RHS2116_EMUL
+	bool "Emulate the RHS2116 (bench testing without the chip fitted)"
+	help
+	  SPI transactions still run on the pins, so the timing can be checked
+	  on a logic analyser, but MISO is ignored and every response comes
+	  from a software model of the chip (src/rhs2116_emul.c). CONVERTs
+	  return a per-channel test sine. Never enable this on a real build.
+
+config RHS2116_DMA_PROBE
+	bool "SPI transport self-test"
+	help
+	  Builds rhs2116_transport_dma_probe(), which measures the SPIM's
+	  STARTED/END timing with PPI timestamps and checks which moments of
+	  writing the ArrayList DMA pointers take effect cleanly. The ep_device
+	  application also runs a stream soak over a spread of channel/rate
+	  layouts at boot when this is set. Takes about a minute; the device is
+	  not usable until it finishes. See ep_device/selftest.conf.
+
+module = RHS2116
+module-str = rhs2116
+source "subsys/logging/Kconfig.template.log_config"
+
+endif # RHS2116

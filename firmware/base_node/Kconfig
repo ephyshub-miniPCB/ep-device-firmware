@@ -1,0 +1,3 @@
+mainmenu "Base node"
+
+source "Kconfig.zephyr"

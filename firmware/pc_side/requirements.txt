@@ -1,0 +1,5 @@
+bleak>=0.21
+pyqtgraph>=0.12
+PyQt5>=5.15
+numpy
+pyserial

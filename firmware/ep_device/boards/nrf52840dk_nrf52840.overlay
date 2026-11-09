@@ -1,0 +1,38 @@
+/*
+ * nrf52840dk/nrf52840: the RHS2116 sits on the Arduino header SPI pins
+ * (D13/D12/D11 = P1.15/P1.14/P1.13) with CS on D10 (P1.12).
+ *
+ * the RHS2116 driver drives a SPIM itself (timer/PPI paced streaming). The
+ * Arduino header's own bus is spi3, which is avoided because of nRF52840
+ * anomaly 198, so spi2 is given the Arduino pins instead and both buses are
+ * left disabled for Zephyr's SPI driver.
+ */
+/ {
+    ep_dev: rhs2116 {
+        compatible = "intan,rhs2116";
+        spim = <&spi2>;
+        cs-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
+    };
+};
+
+&arduino_spi {
+    status = "disabled";
+};
+
+&pinctrl {
+    spi2_rhs2116: spi2_rhs2116 {
+        group1 {
+            psels = <NRF_PSEL(SPIM_SCK, 1, 15)>,
+                <NRF_PSEL(SPIM_MISO, 1, 14)>,
+                <NRF_PSEL(SPIM_MOSI, 1, 13)>;
+        };
+    };
+};
+
+&spi2 {
+    compatible = "nordic,nrf-spim";
+    status = "disabled";
+    pinctrl-0 = <&spi2_rhs2116>;
+    pinctrl-names = "default";
+    /delete-property/ pinctrl-1;
+};
